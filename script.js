@@ -1,83 +1,110 @@
-const userScore = 0;
-const computerScore = 0;
-const userScore_span = document.getElementById("user-score");
-const computerScore_span = document.getElementById("computer-score");
-const scoreBoard_div = document.querySelector(".score-board");
-const result_div = document.querySelector(".reult");
-const rock_div = document.getElementById("r")
-const paper_div = document.getElementById("p")
-const scissors_div = document.getElementById("s")
+// ROCK PAPER SCISSORS IMAGE SOURCE - WIKIPEDIA
+// https://commons.wikimedia.org/wiki/File:Pierre_ciseaux_feuille_l%C3%A9zard_spock_aligned.svg
+var rps = {
+  /* [PROPERTIES] */
+  eYou : null, // holds your move HTML container
+  eCom : null, // holds computer move HTML container
+  eSel : null, // holds HTML rock, scissors, paper selector
+  eGo : null, // holds HTML go button
+  eWin : null, wins : 0, // wins counter
+  eLose: null, loses : 0, // loses counter
+  eDraw : null, draws : 0, // draws counter
 
-//this function makes the computer choose an option
-function getComputerChoice() {
-const choices = ['r', 'p', 's'];
-const randomNumber =Math.floor(Math.random() * 3);
-return choices[randomNumber];
-}
+  /* [GAME INIT] */
+  load : function () {
+  // load() : preload all the images
 
-//when click on object it projects the name of the object
-function convertToWord(letter) {
-if (letter === "r") return "Rock"
-if (letter === "p") return "Paper"
-return "Scissors";
-}
+    var images = ["game-rock.png", "game-paper.png", "game-scissors.png"],
+        img = null,
+        loaded = 0;
+    for (var i of images) {
+      img = new Image();
+      img.onload = function(){
+        loaded++;
+        if (loaded == images.length) { rps.init(); }
+      };
+      img.src = i;
+    }
+  },
 
-//what it says when the user wins
-function win() {
-userScore++;
-userScore_span.innerHTML = userScore;
-computerScore_span.innerHTML = computerScore;
-result_p.innerHTML = convertToWord(userChoice) + " beats " + convertToWord(computerChoice) + ". YOU WIN!";
-}
+  init : function () {
+  // init() : prepare the game
 
-//what it says when the user loses
-function lose() {
-computerScore++;
-userScore_span.innerHTML = userScore;
-computerScore_span.innerHTML = computerScore;
-result_p.innerHTML = convertToWord(computerChoice) + " beats " + convertToWord(userChoice) + ". YOU LOSE!";
-}
+    // Get all the necessary game elements
+    rps.eYou = document.getElementById("rps-you-move");
+    rps.eCom = document.getElementById("rps-com-move");
+    rps.eSel = document.getElementById("rps-you-sel");
+    rps.eGo = document.getElementById("rps-you-go");
+    rps.eWin = document.getElementById("rps-win");
+    rps.eLose = document.getElementById("rps-lose");
+    rps.eDraw = document.getElementById("rps-draw");
 
-//when the user ties
-function draw() {
-result_p.innerHTML = convertToWord(computerChoice) + " equals " + convertToWord(userChoice) + ". DRAW!";
-}
+    // When user changes rock, paper, scissors selection
+    rps.eSel.addEventListener("change", rps.switch);
+    rps.switch();
 
-//scenarios that could happen during the game
-function game(userChoice) {
-const computerChoice = getComputerChoice();
-switch (userChoice + computerChoice) {
-case "rs":
-case "pr":
-case "sp":
-win(userChoice, computerChoice);
-break;
-case "rp":
-case "ps":
-case "sr":
-lose(userChoice, computerChoice);
-break;
-case "rr":
-case "pp":
-case "ss":
-draw(userChoice, computerChoice)
-break;
-}
-}
+    // When user hits "Go!"
+    rps.eGo.addEventListener("click", rps.game);
 
-//register input from a click
-function main() {
-rock_div.addEventListener('click', function() {
-  game("r");
-})
+    // Unlock all controls
+    rps.eSel.disabled = false;
+    rps.eGo.disabled = false;
+  },
 
-paper_div.addEventListener('click', function() {
-  game("p");
-})
+  /* [GAME RUN] */
+  switch : function () {
+  // switch() : when user changes move
 
-scissors_div.addEventListener('click', function() {
-  game("s");
-})
-}
+    var img = new Image();
+    img.src = "game-" + rps.eSel.value + ".png";
+    rps.eYou.innerHTML = "";
+    rps.eYou.appendChild(img);
+  },
 
-main();
+  game : function () {
+  // game() : game on!
+
+    // Random computer move - Equal 33.3333% chance to get each
+    var comMove = Math.random();
+    if (comMove <= 0.33) { comMove = "rock"; }
+    else if (comMove <= 0.67) { comMove = "paper"; }
+    else { comMove = "scissors"; }
+
+    // Update computer move graphic
+    var img = new Image();
+    img.src = "game-" + comMove + ".png";
+    rps.eCom.innerHTML = "";
+    rps.eCom.appendChild(img);
+
+    // Win, lose, or draw?
+    var youMove = rps.eSel.value;
+    if (youMove == comMove) {
+      rps.draws++;
+      rps.eDraw.innerHTML = rps.draws;
+      alert("DRAW");
+    } else {
+      var win = true;
+      switch (youMove) {
+        case "rock":
+          if (comMove=="paper") { win = false; }
+          break;
+        case "paper":
+          if (comMove=="scissors") { win = false; }
+          break;
+        case "scissors":
+          if (comMove=="rock") { win = false; }
+          break;
+      }
+      if (win) {
+        rps.wins++;
+        rps.eWin.innerHTML = rps.wins;
+        alert("YOU WIN");
+      } else {
+        rps.loses++;
+        rps.eLose.innerHTML = rps.loses;
+        alert("YOU LOSE");
+      }
+    }
+  }
+};
+window.addEventListener("load", rps.load);
