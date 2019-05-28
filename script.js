@@ -23,23 +23,23 @@ return "Scissors";
 }
 
 //what it says when the user wins
-function win(userChoice, computerChoice) {
+function win() {
 userScore++;
 userScore_span.innerHTML = userScore;
 computerScore_span.innerHTML = computerScore;
 result_p.innerHTML = convertToWord(userChoice) + " beats " + convertToWord(computerChoice) + ". YOU WIN!";
 }
 
-//what it says when the function loses
-function lose(userChoice, computerChoice) {
+//what it says when the user loses
+function lose() {
 computerScore++;
 userScore_span.innerHTML = userScore;
 computerScore_span.innerHTML = computerScore;
 result_p.innerHTML = convertToWord(computerChoice) + " beats " + convertToWord(userChoice) + ". YOU LOSE!";
 }
 
-//when it is a tie
-function draw(userChoice, computerChoice) {
+//when the user ties
+function draw() {
 result_p.innerHTML = convertToWord(computerChoice) + " equals " + convertToWord(userChoice) + ". DRAW!";
 }
 
