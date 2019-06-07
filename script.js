@@ -1,5 +1,4 @@
-// ROCK PAPER SCISSORS IMAGE SOURCE - WIKIPEDIA
-// https://commons.wikimedia.org/wiki/File:Pierre_ciseaux_feuille_l%C3%A9zard_spock_aligned.svg
+//code sourced from https://youtu.be/Qqy8Ov3NWvQ
 var rps = {
   /* [PROPERTIES] */
   eYou : null, // holds your move HTML container
